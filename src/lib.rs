@@ -14,6 +14,9 @@ mod tests {
         assert!(stack.size() == 2);
     }
 
+    use super::searching;
+    use searching::BST;
+
     #[test]
     fn test_string_result_queue() {
         let mut queue: Queue<String> = Queue::new();

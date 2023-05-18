@@ -7,11 +7,11 @@
 /// 
 /// # Examples
 /// ```
-/// use fundamentals::binary_search::binary_search;
+/// use itualgs_rs::fundamentals::binary_search;
 ///
 /// let list = vec![0,1,2,3,4,5,6,7,8,9];
-/// let index_of_three = index_of(&list, 3);
-/// assert!(index_of_three == 3)
+/// let index_of_three = binary_search::index_of(&list, 3);
+/// assert!(index_of_three.unwrap() == 3)
 /// ```  
 pub fn index_of<T>(array: &[T], key: T) -> Option<usize>
 where 

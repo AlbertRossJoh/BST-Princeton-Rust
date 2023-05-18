@@ -1,3 +1,3 @@
 (function() {var implementors = {
-"doc":[["impl&lt;T&gt; Freeze for <a class=\"struct\" href=\"doc/struct.Stack.html\" title=\"struct doc::Stack\">Stack</a>&lt;T&gt;",1,["doc::Stack"]]]
+"doc":[["impl&lt;T&gt; Freeze for <a class=\"struct\" href=\"doc/fundamentals/stack/struct.Stack.html\" title=\"struct doc::fundamentals::stack::Stack\">Stack</a>&lt;T&gt;",1,["doc::fundamentals::stack::Stack"]],["impl&lt;T&gt; Freeze for <a class=\"struct\" href=\"doc/fundamentals/queue/struct.Queue.html\" title=\"struct doc::fundamentals::queue::Queue\">Queue</a>&lt;T&gt;",1,["doc::fundamentals::queue::Queue"]]]
 };if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

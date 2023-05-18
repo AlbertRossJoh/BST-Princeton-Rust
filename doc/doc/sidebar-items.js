@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":["Stack"]};
+window.SIDEBAR_ITEMS = {"mod":["fundamentals"]};

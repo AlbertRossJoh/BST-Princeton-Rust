@@ -46,9 +46,12 @@ impl<'a, T:Ord, K:Ord> BST<T,K> where T:Clone, K:Clone {
         if let Some(e) = &mut self.root {
             if e.left.is_none() {
                 if e.right.is_some() {
-                    self.root = e.right.clone()
+                    let val = e.as_mut().val.clone();
+                    self.root = e.right.clone();
+                    return Some(val);
                 } else {
-                    self.root = None
+                    self.root = None;
+                    return None;
                 }
             }
         } else {
@@ -56,26 +59,21 @@ impl<'a, T:Ord, K:Ord> BST<T,K> where T:Clone, K:Clone {
         }
         let mut curr: &mut Option<Box<Node<T,K>>> = &mut self.root;
         while let Some(e) = curr {
-            println!("{}", e.left.is_none());
-            println!("{}", e.right.is_none());
-            match (&mut e.left, &mut e.right) {
-                (Some(o), _) => {
-                    curr = &mut o.left;
+            match (e.left.is_some(), e.right.is_some()) {
+                (true, _) => {
+                    curr = &mut e.left;
                 }
-                (None, None) => {
+                (false, false) => {
                     let val = e.val.clone();
                     curr = &mut  None;
                     return Some(val);
                 }
-                (None, Some(o)) => {
-                    let val = o.val.clone();
-                    curr = &mut None;
+                (false, true) => {
+                    let val = e.val.clone();
+                    e.right = None;
                     return Some(val);
                 }
-                // (_,_) => {return None;}
             }
-            // println!("hit");
-            // println!("{}", curr.is_some());
         }
         None
     }
@@ -84,9 +82,12 @@ impl<'a, T:Ord, K:Ord> BST<T,K> where T:Clone, K:Clone {
         if let Some(e) = &mut self.root {
             if e.right.is_none() {
                 if e.left.is_some() {
-                    self.root = e.left.clone()
+                    let val = e.as_mut().val.clone();
+                    self.root = e.left.clone();
+                    return Some(val);
                 } else {
-                    self.root = None
+                    self.root = None;
+                    return None;
                 }
             }
         } else {
@@ -94,25 +95,25 @@ impl<'a, T:Ord, K:Ord> BST<T,K> where T:Clone, K:Clone {
         }
         let mut curr: &mut Option<Box<Node<T,K>>> = &mut self.root;
         while let Some(e) = curr {
-            match (&mut e.left, &mut e.right) {
-                (None, Some(o)) => {
-                    curr = &mut o.right;
+            match (e.right.is_some(), e.left.is_some()) {
+                (true, _) => {
+                    curr = &mut e.right;
                 }
-                (None, None) => {
+                (false, false) => {
                     let val = e.val.clone();
-                    curr = &mut None;
+                    curr = &mut  None;
                     return Some(val);
                 }
-                (Some(o), _) => {
-                    let val = o.val.clone();
-                    curr = &mut None;
+                (false, true) => {
+                    let val = e.val.clone();
+                    e.right = None;
                     return Some(val);
                 }
-                // (_,_) => {return None;}
             }
         }
         None
     }
+
     pub fn get_root(&self) -> &Option<K>{
         if let Some(e) = &self.root {
             Some(&e.val);

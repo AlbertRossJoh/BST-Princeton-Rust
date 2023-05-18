@@ -1,4 +1,4 @@
-use std::{cmp::Ordering::*, any::{Any, TypeId}, iter::Cloned, fmt::Debug};
+use std::{cmp::Ordering::*, fmt::Debug};
 
 #[derive(Clone)]
 #[derive(Debug)]
@@ -8,31 +8,6 @@ struct Node<T:Ord, K:Ord> {
     size: i32,
     left: Option<Box<Node<T,K>>>,
     right: Option<Box<Node<T,K>>>,
-}
-
-pub fn test_ting(){
-    let mut n = Node::new(1, "hej", 0);
-    let mut m = Node { key: 1, val: "jeh", size: 0, left: None, right: None };
-    let mut bs: BST<i32,String> = BST::new();
-    println!("{}", bs.get_root().is_none());
-
-    for i in 0..10{
-        bs.put(i, format!("{}", i+10))
-    }
-    if let Some(e) = bs.get_root(){
-        println!("{}", e);
-    }
-    bs.put(2, "huh".to_string());
-    if let Some(e) = bs.get_root(){
-        // if let Some(o) = &e.right{
-        //     println!("{}", "hit");
-        //     println!("{}", o.val);
-        //     println!("{}", "hit");
-        // }
-        // println!("{}",e.left.is_none());
-        // println!("{}",e.right.unwrap().val);
-    }
-    
 }
 
 pub struct BST<T:Ord, K:Ord> {root:Option<Box<Node<T, K>>>}
@@ -122,7 +97,6 @@ impl<'a, T:Ord, K:Ord> BST<T,K> where T:Clone, K:Clone {
     }
 
     pub fn get(&mut self, key: T) -> Option<&mut K>{
-        // let n = Node::new(key,val,0);
         if self.root.is_none(){
             return None;
         }
@@ -194,7 +168,7 @@ impl<T:Ord, K:Ord> Node<T,K> where T:Clone, K:Clone {
         }
     }
 
-    fn Clone(&self)->Node<T,K>{
+    fn clone(&self)->Node<T,K>{
         Node{
             key: self.key.clone(),
             val: self.val.clone(),

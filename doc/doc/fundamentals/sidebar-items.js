@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["queue","stack"]};
+window.SIDEBAR_ITEMS = {"mod":["binary_search","queue","stack"]};

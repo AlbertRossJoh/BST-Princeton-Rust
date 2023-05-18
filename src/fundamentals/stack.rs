@@ -10,6 +10,47 @@
 /// This implementation uses a Vec\<T\>, to hold its elements.
 /// 
 /// Author: cave
+/// 
+/// # Examples
+///
+/// ```
+/// use itualgs_rs::fundamentals::stack::Stack;
+///
+/// let mut stack = Stack::new();
+/// 
+/// // A stack is exactly like a book stack!
+/// stack.push("The Great Gatsby");
+/// // TOP
+/// // The Great Gatsby
+/// // BOTTOM
+/// stack.push("Alice in Wonderland");
+/// // TOP
+/// // Alice in Wonderland
+/// // The Great Gatsby
+/// // BOTTOM
+/// 
+/// stack.push("The Trial");
+/// // TOP
+/// // The Trial
+/// // Alice in Wonderland
+/// // The Great Gatsby
+/// // BOTTOM
+/// 
+/// stack.pop();
+/// // TOP
+/// //                      ---> The Trial
+/// // Alice in Wonderland
+/// // The Great Gatsby
+/// // BOTTOM
+/// 
+/// let mut alice_in_wonderland = stack.peek().unwrap().to_string();
+/// // TOP
+/// // Alice in Wonderland <---
+/// // The Great Gatsby
+/// // BOTTOM
+///
+/// assert!(alice_in_wonderland == "Alice in Wonderland")
+/// ```
 pub struct Stack<T> {
     elements: Vec<T>,
 }

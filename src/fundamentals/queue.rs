@@ -15,7 +15,7 @@ use std::collections::LinkedList;
 /// # Examples
 ///
 /// ```
-/// use fundamentals::queue::Queue;
+/// use itualgs_rs::fundamentals::queue::Queue;
 ///
 /// let mut queue = Queue::new();
 /// 

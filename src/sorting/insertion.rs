@@ -1,7 +1,7 @@
 use std::ptr;
 
 /// Insertion sort is one of the simplest sorting algorithms. It is sometimes also known as the brigde hand sorting algorithm.
-/// This algorithm is particulary good at sorting partially sorted data, since everythig behind index *i* is sorted.
+/// This algorithm is particulary good at sorting partially sorted data, since everything behind index *i* is sorted.
 /// This means that calling `sort` on a already sorted list, will result in *O(N)*. But the worst case is *1/2N^2=O(N^2)*.
 /// 
 /// Author: AlberRossJoh

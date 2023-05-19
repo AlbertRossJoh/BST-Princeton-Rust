@@ -25,26 +25,21 @@ struct Node<T:Ord, K> {
 /// 
 /// bst.put(24, "Ferris");
 /// 
+/// let mut another_bst: BST<u8,&str> = BST::new();
+/// another_bst.put(4, "val4");
+/// another_bst.put(10, "val10");
+/// another_bst.put(2, "val2");
+/// another_bst.put(3, "val3");
+/// another_bst.put(11, "val11");
+/// 
+/// assert_eq!(another_bst.get(2).unwrap(), &"val2");
+/// let val = another_bst.delete_min();
+/// assert_eq!(another_bst.get(2).is_none(), true);
+/// assert_eq!(another_bst.get(3).is_some(), true);
+/// 
 /// ```
 pub struct BST<T:Ord, K> {root:Option<Box<Node<T, K>>>}
 
-// fn delete_min<T:Ord,K>(x: *mut Box<Node<T,K>>) -> *mut Box<Node<T,K>> {
-//     unsafe {
-//         // let p1: *mut Node<T,K> = &mut x;
-//         if x.as_ref().is_none(){
-//             return x;
-//         }
-//         // if p1.as_ref().unwrap().left.is_none(){
-//         //     return p1;
-//         // }
-//         let left: *mut Box<Node<T,K>> = &mut x.as_mut().unwrap().left.unwrap();
-//         // x.as_ref().unwrap().left = Some(Box::new(*delete_min(x).as_ref().unwrap()));
-//         // x.as_ref().unwrap().left = Some(*delete_min(x).as_ref().unwrap());
-//         // p1.replace(temp);
-//         // p1.replace(delete_min(p1.as_mut()).to_owned());
-//         return x;
-//     }
-// }
 
 unsafe fn has_children<T:Ord,K:Ord>(node: *mut Option<Box<Node<T,K>>>) -> (bool, bool) 
 where Box<Node<T,K>> : Clone
@@ -274,7 +269,7 @@ mod tests {
         assert_eq!(bst.get(11).unwrap(), &"val11");
         let val = bst.delete_max();
         assert_eq!(bst.get(11).is_none(), true);
-        // assert_eq!(&val.unwrap(), &"val4");
+        assert_eq!(bst.get(3).is_some(), true);
     }
 }
 

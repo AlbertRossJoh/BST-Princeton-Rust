@@ -9,6 +9,9 @@ use std::ptr;
 /// # Examples
 /// ```
 /// use itualgs_rs::sorting::insertion;
+/// use itualgs_rs::sorting::insertion::index_sort;
+/// use itualgs_rs::sorting::insertion::sort_slice;
+/// use itualgs_rs::sorting::insertion::sort;
 ///
 /// let mut list = vec!['f','e','r','r','i','s'];
 /// sort(&mut list);
@@ -16,14 +19,14 @@ use std::ptr;
 /// assert_eq!(list, vec!['e','f','i','r','r','s']);
 /// 
 /// let mut new_list = vec![9,8,7,6,5,4,3,2,1,0];
-/// sort_slice(&mut list,3,8);
+/// sort_slice(&mut new_list,3,8);
 /// 
-/// assert_eq!(list, vec![9,8,7,2,3,4,5,6,1,0]);
+/// assert_eq!(new_list, vec![9,8,7,2,3,4,5,6,1,0]);
 /// 
-/// let list = vec![4,2,4,1];
-/// let index = index_sort(&list);
+/// let another_list = vec![4,2,4,1];
+/// let index = index_sort(&another_list);
 /// 
-/// assert_eq!(list, vec![4,2,4,1]);
+/// assert_eq!(another_list, vec![4,2,4,1]);
 /// assert_eq!(index, vec![1,2,4,4]);
 /// ```  
 

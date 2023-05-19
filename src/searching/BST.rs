@@ -14,7 +14,7 @@ struct Node<T:Ord, K> {
 /// It supports the operations `put`, `get`, `delete_max` and `delete_min`.
 /// 
 /// Every method should take constant worst-case running time: *O(N)*. With an average of *O(log N)*
-/// /// Author: AlbertRossJoh
+/// Author: AlbertRossJoh
 /// 
 /// # Examples
 ///
@@ -40,19 +40,11 @@ struct Node<T:Ord, K> {
 /// ```
 pub struct BST<T:Ord, K> {root:Option<Box<Node<T, K>>>}
 
-
-unsafe fn has_children<T:Ord,K:Ord>(node: *mut Option<Box<Node<T,K>>>) -> (bool, bool) 
-where Box<Node<T,K>> : Clone
-{
-    let temp = node.read_volatile().clone();
-    let clean_val = temp.unwrap_or(return (false,false));
-    (clean_val.left.is_some(), clean_val.right.is_some())
-}
-
 impl<'a, T:Ord, K> BST<T,K> where T:Clone, K:Clone {
     pub fn new()->BST<T,K>{
         BST { root: None }
     }
+
     
     /// function for deleting the min node, returns true if successful false otherwise
     pub fn delete_min(&mut self) -> bool{

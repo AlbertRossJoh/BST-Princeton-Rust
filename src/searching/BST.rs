@@ -2,7 +2,7 @@ use std::{cmp::Ordering::*, fmt::Debug, mem};
 
 #[derive(Clone)]
 #[derive(Debug)]
-struct Node<T:Ord, K:Ord> {
+struct Node<T:Ord, K> {
     key: T,
     val: K,
     size: i32,
@@ -26,15 +26,104 @@ struct Node<T:Ord, K:Ord> {
 /// bst.put(24, "Ferris");
 /// 
 /// ```
-pub struct BST<T:Ord, K:Ord> {root:Option<Box<Node<T, K>>>}
+pub struct BST<T:Ord, K> {root:Option<Box<Node<T, K>>>}
 
-impl<'a, T:Ord, K:Ord> BST<T,K> where T:Clone, K:Clone {
+// fn delete_min<T:Ord,K>(x: *mut Box<Node<T,K>>) -> *mut Box<Node<T,K>> {
+//     unsafe {
+//         // let p1: *mut Node<T,K> = &mut x;
+//         if x.as_ref().is_none(){
+//             return x;
+//         }
+//         // if p1.as_ref().unwrap().left.is_none(){
+//         //     return p1;
+//         // }
+//         let left: *mut Box<Node<T,K>> = &mut x.as_mut().unwrap().left.unwrap();
+//         // x.as_ref().unwrap().left = Some(Box::new(*delete_min(x).as_ref().unwrap()));
+//         // x.as_ref().unwrap().left = Some(*delete_min(x).as_ref().unwrap());
+//         // p1.replace(temp);
+//         // p1.replace(delete_min(p1.as_mut()).to_owned());
+//         return x;
+//     }
+// }
+
+unsafe fn has_children<T:Ord,K:Ord>(node: *mut Option<Box<Node<T,K>>>) -> (bool, bool) 
+where Box<Node<T,K>> : Clone
+{
+    let temp = node.read_volatile().clone();
+    let clean_val = temp.unwrap_or(return (false,false));
+    (clean_val.left.is_some(), clean_val.right.is_some())
+}
+
+impl<'a, T:Ord, K> BST<T,K> where T:Clone, K:Clone {
     pub fn new()->BST<T,K>{
         BST { root: None }
     }
     
-    
+    /// function for deleting the min node, returns true if successful false otherwise
+    pub fn delete_min(&mut self) -> bool{
+        // Get the root
+        let mut root: *mut Option<Box<Node<T,K>>> = &mut self.root;
+        // Make a clone of the root to make sure that we're not intrusive
+        let mut parent: &mut Box<Node<T,K>> = &mut self.root.clone().unwrap();
+        unsafe {
+            while let Some(ref mut node) = *root {
+                // if left is none we have reached our goal
+                if node.left.is_none(){
+                    // There might be a right value which we want to keep
+                    if node.right.is_some() {
+                        // get the right node of the current
+                        let curr = node.right.clone().unwrap();
+                        // set current node to none to remove value
+                        *root = None;
+                        // we should make sure that the parents left value gets a reference to the right value
+                        parent.left.insert(curr);
+                        return true;
+                    }
+                    // There is no right value, just remove
+                    *root = None;
+                    return true;
+                }
+                // go to next node
+                root = &mut node.left;
+                // get the parent of the next
+                parent = node;
+            }
+        }
+        false
+    }
 
+    /// function for deleting the max node, returns true if successful false otherwise
+    pub fn delete_max(&mut self) -> bool{
+        // Get the root
+        let mut root: *mut Option<Box<Node<T,K>>> = &mut self.root;
+        // Make a clone of the root to make sure that we're not intrusive
+        let mut parent: &mut Box<Node<T,K>> = &mut self.root.clone().unwrap();
+        unsafe {
+            while let Some(ref mut node) = *root {
+                // if right is none we have reached our goal
+                if node.right.is_none(){
+                    // There might be a left value which we want to keep
+                    if node.left.is_some() {
+                        // get the left node of the current
+                        let curr = node.left.clone().unwrap();
+                        // set current node to none to remove value
+                        *root = None;
+                        // we should make sure that the parents right value gets a reference to the right value
+                        parent.right.insert(curr);
+                        return true;
+                    }
+                    // There is no left value, just remove
+                    *root = None;
+                    return true;
+                }
+                // go to next node
+                root = &mut node.right;
+                // get the parent of the next
+                parent = node;
+            }
+        }
+        false
+    }
     
     pub fn get_root(&self) -> Option<&K>{
         if let Some(e) = &self.root {
@@ -104,7 +193,7 @@ impl<'a, T:Ord, K:Ord> BST<T,K> where T:Clone, K:Clone {
     }
 }
 
-impl<T:Ord, K:Ord> Node<T,K> where T:Clone, K:Clone {
+impl<T:Ord, K> Node<T,K> where T:Clone, K:Clone {
     fn new(key:T, val:K, size: i32)->Node<T,K>{
         Node{
             key: key,
@@ -156,6 +245,36 @@ mod tests {
         
         let val = bst.get_root().unwrap();
         assert_eq!(val, &"val4");
+    }
+
+    #[test]
+    fn test_delete_min() {
+        let mut bst: BST<u8,&str> = BST::new();
+        bst.put(4, "val4");
+        bst.put(10, "val10");
+        bst.put(2, "val2");
+        bst.put(3, "val3");
+        bst.put(11, "val11");
+        
+        assert_eq!(bst.get(2).unwrap(), &"val2");
+        let val = bst.delete_min();
+        assert_eq!(bst.get(2).is_none(), true);
+        // assert_eq!(&val.unwrap(), &"val4");
+    }
+
+    #[test]
+    fn test_delete_max() {
+        let mut bst: BST<u8,&str> = BST::new();
+        bst.put(4, "val4");
+        bst.put(10, "val10");
+        bst.put(2, "val2");
+        bst.put(3, "val3");
+        bst.put(11, "val11");
+        
+        assert_eq!(bst.get(11).unwrap(), &"val11");
+        let val = bst.delete_max();
+        assert_eq!(bst.get(11).is_none(), true);
+        // assert_eq!(&val.unwrap(), &"val4");
     }
 }
 

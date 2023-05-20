@@ -35,7 +35,7 @@ fn less<T:Ord>(v:&T, w:&T) -> bool{
 }
 
 fn exch<T:Ord>(a: &mut Vec<T>, i:usize, j:usize){
-    if i != j && i < a.len() && j < a.len() {
+    if i != j {
         a.swap(i, j);
     }
 }

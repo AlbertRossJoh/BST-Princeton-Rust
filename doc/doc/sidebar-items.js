@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["fundamentals","searching","sorting"]};
+window.SIDEBAR_ITEMS = {"mod":["fundamentals","randomization","searching","sorting"]};

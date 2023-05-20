@@ -7,5 +7,5 @@
 ## Affiliation with IT University of Copenhagen
 This project was created in 2023 by two students from the IT University of Copenhagen (ITU). Please note that while we are affiliated with ITU as students, this project is not officially associated with or endorsed by the IT University of Copenhagen. It is an independent project conducted for educational purposes.
 
-# Contributing
+## Contributing
 TBD..

@@ -26,7 +26,7 @@ impl Graph {
     }
 
     /// returns the vertices adjacent to v
-    pub fn adj_vertices(&mut self, v:usize) -> std::collections::linked_list::Iter<'_, usize> {
+    pub fn adj_vertices(&self, v:usize) -> std::collections::linked_list::Iter<'_, usize> {
         self.validate(v);
         self.adj[v].iterator()
     }

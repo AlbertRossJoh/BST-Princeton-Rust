@@ -26,9 +26,9 @@ impl Graph {
     }
 
     /// returns the vertices adjacent to v
-    pub fn adj_vertices(&self, v:usize) -> std::collections::linked_list::Iter<'_, usize> {
-        self.validate(v);
-        self.adj[v].iterator()
+    pub fn adj_vertices(&self, v:&usize) -> std::collections::linked_list::Iter<'_, usize> {
+        self.validate(*v);
+        self.adj[*v].iterator()
     }
 
     /// adds an edge between v and w
@@ -74,7 +74,7 @@ mod tests {
         let mut g = Graph::new(4);
         g.add_edge(0, 1);
         g.add_edge(0, 2);
-        let mut it = g.adj_vertices(0);
+        let mut it = g.adj_vertices(&0);
         assert_eq!(*it.next().unwrap(), 2 as usize);
         assert_eq!(*it.next().unwrap(), 1 as usize);
     }
@@ -82,7 +82,7 @@ mod tests {
     #[test]
     fn test_create_empty_graph(){
         let mut g = Graph::new(4);
-        let mut it = g.adj_vertices(0);
+        let mut it = g.adj_vertices(&0);
         assert_eq!(it.next(), None);
     }
 }

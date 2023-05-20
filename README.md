@@ -1,5 +1,5 @@
-# itualgs_rs
+# itualgs_rs 
+itualgs_rs strives to be a library that contains all the basic data structures and algorithms found in the book "Algorithms, 4th Edition" by Robert Sedgewick and Kevin Wayne. The project intends to have the same API as the equivalent Java library provided by the authors of the Algorithms book.
 
-itualgs_rs is a rust library of all basic data structures and algorithms, which has the same api as https://algs4.cs.princeton.edu/code/.
-
-This library will be expanded to match it's java counterpart more closely.
+# Contributing
+TBD..

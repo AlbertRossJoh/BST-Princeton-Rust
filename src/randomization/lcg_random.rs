@@ -8,7 +8,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 /// and seeds it using the time. The recurrence relation being:
 /// `x = (1103515245 * x + 12345) % 2147483648`.
 /// 
-/// Do note that this implementation is *NOT* cryptograhpically secure.
+/// Do note that this implementation is *NOT* cryptograhically secure.
 /// 
 /// Author: cave
 /// 

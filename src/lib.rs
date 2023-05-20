@@ -2,6 +2,7 @@ pub mod fundamentals;
 pub mod searching;
 pub mod sorting;
 pub mod randomization;
+pub mod graph;
 
 #[cfg(test)]
 mod tests {

@@ -7,7 +7,7 @@ pub struct Bag<T> {
     size: usize,
 }
 
-impl<T> Bag<T> {
+impl<T> Bag<T> where T:Clone {
 
     pub fn new() -> Bag<T>{
         Bag{
@@ -31,5 +31,9 @@ impl<T> Bag<T> {
 
     pub fn iterator(&mut self) -> std::collections::linked_list::Iter<'_, T>{
         self.elements.iter()
+    }
+
+    pub fn clone(&self) -> Bag<T>{
+        Bag { elements:self.elements.clone(), size: self.size }
     }
 }

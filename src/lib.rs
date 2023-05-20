@@ -18,10 +18,11 @@ mod tests {
     }
 
     use super::searching;
-    use searching::BST;
+    use searching::BST::BST;
     
     #[test]
     fn test_string_result_queue() {
+        let mut haps: BST<i32,i32> = BST::new();
         let mut queue: Queue<String> = Queue::new();
         queue.enqueue("Bob".to_string());
         

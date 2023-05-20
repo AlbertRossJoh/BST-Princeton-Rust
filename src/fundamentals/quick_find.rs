@@ -1,16 +1,16 @@
 
 
-pub struct quick_find{
+pub struct QuickFind{
     count: usize,
     id: Vec<usize>,
 }
 
 
 
-impl quick_find {
+impl QuickFind {
 
-    pub fn new(&self, n:usize) -> quick_find{
-        let mut qf = quick_find{count: n, id: Vec::new()};
+    pub fn new(&self, n:usize) -> QuickFind{
+        let mut qf = QuickFind{count: n, id: Vec::with_capacity(n)};
         for i in 0..n {
             qf.id.push(i);
         }

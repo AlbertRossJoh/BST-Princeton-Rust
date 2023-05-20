@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["insertion","merge","selection"]};
+window.SIDEBAR_ITEMS = {"mod":["insertion","merge","quick","selection"]};

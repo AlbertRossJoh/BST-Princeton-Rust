@@ -19,11 +19,13 @@ struct Node<T:Ord, K> {
 /// # Examples
 ///
 /// ```
-/// use searching::BST;;
+/// use itualgs_rs::searching::BST::BST;
 ///
-/// let mut bst<i32,&str> = BST::new();
+/// let mut bst: BST<i32,&str> = BST::new();
 /// 
 /// bst.put(24, "Ferris");
+/// 
+/// assert_eq!(bst.get_root().unwrap(), &"Ferris");
 /// 
 /// let mut another_bst: BST<u8,&str> = BST::new();
 /// another_bst.put(4, "val4");
@@ -112,6 +114,7 @@ impl<'a, T:Ord, K> BST<T,K> where T:Clone, K:Clone {
         false
     }
     
+    /// Gets the root of the tree
     pub fn get_root(&self) -> Option<&K>{
         if let Some(e) = &self.root {
             return Some(&e.val);
@@ -119,6 +122,7 @@ impl<'a, T:Ord, K> BST<T,K> where T:Clone, K:Clone {
         None
     }
     
+    /// Get a value from a specified key, returns None if none is found
     pub fn get(&mut self, key: T) -> Option<&mut K>{
         if self.root.is_none(){
             return None;
@@ -147,6 +151,8 @@ impl<'a, T:Ord, K> BST<T,K> where T:Clone, K:Clone {
         None
     }
 
+
+    /// Puts a key value pair in the symbol table
     pub fn put(&mut self, key: T, val: K){
         let n = Node::new(key,val,0);
         if self.root.is_none(){
@@ -205,6 +211,14 @@ impl<T:Ord, K> Node<T,K> where T:Clone, K:Clone {
 #[cfg(test)]
 mod tests {
     use super::BST;
+    // use crate itualgs_rs::searching::BST;
+
+    #[test]
+    fn test_get_root() {
+        let mut bst: BST<i32,&str> = BST::new();
+        bst.put(24, "Ferris");
+        assert_eq!(bst.get_root().unwrap(), &"Ferris");
+    }
 
     #[test]
     fn test_get() {
@@ -246,7 +260,6 @@ mod tests {
         assert_eq!(bst.get(2).unwrap(), &"val2");
         let val = bst.delete_min();
         assert_eq!(bst.get(2).is_none(), true);
-        // assert_eq!(&val.unwrap(), &"val4");
     }
 
     #[test]

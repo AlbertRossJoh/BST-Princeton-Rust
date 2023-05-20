@@ -1,3 +1,5 @@
+use crate::randomization;
+
 
 /// Quicksort is a recusive algorithm that sorts an array by creating partitioning lines where elements before the line are guarenteed to be smaller than the values after.
 /// The running time of this algorithm is *O(N log N)*, with a worst case of *O(N^2)* if the smallest and largest values are chosen as pivoting elements.
@@ -30,6 +32,23 @@ pub fn sort<T:Ord>(a: &mut Vec<T>)
     {
     q_sort(a, 0, a.len()-1);
 }
+
+/// Shuffles the list before running quicksort
+pub fn sort_shuffle<T:Ord>(a: &mut Vec<T>) 
+    where T:Clone
+    {
+    randomization::lcg_random::shuffle_list(a);
+    q_sort(a, 0, a.len()-1);
+}
+
+/// Shuffles the list before running quickselect
+pub fn select_shuffle<T:Ord>(a: &mut Vec<T>, k:usize) -> T
+    where T:Clone
+    {
+    randomization::lcg_random::shuffle_list(a);
+    select(a, k)
+}
+
 
 fn q_sort<T:Ord>(a: &mut Vec<T>, lo:usize, hi:usize) 
     where T:Clone

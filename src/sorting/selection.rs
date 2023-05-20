@@ -35,10 +35,8 @@ fn less<T:Ord>(v:&T, w:&T) -> bool{
 }
 
 fn exch<T:Ord>(a: &mut Vec<T>, i:usize, j:usize){
-    unsafe {
-        let p1: *mut T = &mut a[i];
-        let p2: *mut T = &mut a[j];
-        ptr::swap(p1, p2);
+    if i != j && i < a.len() && j < a.len() {
+        a.swap(i, j);
     }
 }
 

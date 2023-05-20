@@ -165,26 +165,19 @@
 ///
 /// let mut stack = Stack::new();
 /// 
-/// // A stack is exactly like a book stack
-/// // You need to remove the top book first
+/// // A stack is exactly like a book stack!
 /// stack.push(&quot;The Great Gatsby&quot;);
 /// // TOP
-/// //
-/// //
-/// //
 /// // The Great Gatsby
 /// // BOTTOM
 /// stack.push(&quot;Alice in Wonderland&quot;);
 /// // TOP
-/// //
-/// //
 /// // Alice in Wonderland
 /// // The Great Gatsby
 /// // BOTTOM
 /// 
 /// stack.push(&quot;The Trial&quot;);
 /// // TOP
-/// //
 /// // The Trial
 /// // Alice in Wonderland
 /// // The Great Gatsby
@@ -192,11 +185,18 @@
 /// 
 /// stack.pop();
 /// // TOP
-/// //
-/// //                  -&gt;    The Trial
+/// //                      ---&gt; The Trial
 /// // Alice in Wonderland
 /// // The Great Gatsby
 /// // BOTTOM
+/// 
+/// let mut alice_in_wonderland = stack.peek().unwrap().to_string();
+/// // TOP
+/// // Alice in Wonderland &lt;---
+/// // The Great Gatsby
+/// // BOTTOM
+///
+/// assert!(alice_in_wonderland == &quot;Alice in Wonderland&quot;)
 /// ```
 </span><span class="kw">pub struct </span>Stack&lt;T&gt; {
     elements: Vec&lt;T&gt;,

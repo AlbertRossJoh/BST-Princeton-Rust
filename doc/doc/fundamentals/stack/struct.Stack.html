@@ -11,26 +11,19 @@ Pop, peek, size, and is_empty all take constant worst-case running time: <em>O</
 
 <span class="kw">let </span><span class="kw-2">mut </span>stack = Stack::new();
  
-<span class="comment">// A stack is exactly like a book stack
-// You need to remove the top book first
+<span class="comment">// A stack is exactly like a book stack!
 </span>stack.push(<span class="string">&quot;The Great Gatsby&quot;</span>);
 <span class="comment">// TOP
-//
-//
-//
 // The Great Gatsby
 // BOTTOM
 </span>stack.push(<span class="string">&quot;Alice in Wonderland&quot;</span>);
 <span class="comment">// TOP
-//
-//
 // Alice in Wonderland
 // The Great Gatsby
 // BOTTOM
  
 </span>stack.push(<span class="string">&quot;The Trial&quot;</span>);
 <span class="comment">// TOP
-//
 // The Trial
 // Alice in Wonderland
 // The Great Gatsby
@@ -38,11 +31,18 @@ Pop, peek, size, and is_empty all take constant worst-case running time: <em>O</
  
 </span>stack.pop();
 <span class="comment">// TOP
-//
-//                  -&gt;    The Trial
+//                      ---&gt; The Trial
 // Alice in Wonderland
 // The Great Gatsby
-// BOTTOM</span></code></pre></div>
+// BOTTOM
+ 
+</span><span class="kw">let </span><span class="kw-2">mut </span>alice_in_wonderland = stack.peek().unwrap().to_string();
+<span class="comment">// TOP
+// Alice in Wonderland &lt;---
+// The Great Gatsby
+// BOTTOM
+
+</span><span class="macro">assert!</span>(alice_in_wonderland == <span class="string">&quot;Alice in Wonderland&quot;</span>)</code></pre></div>
 </div></details><h2 id="implementations" class="small-section-header">Implementations<a href="#implementations" class="anchor">§</a></h2><div id="implementations-list"><details class="toggle implementors-toggle" open><summary><section id="impl-Stack%3CT%3E" class="impl"><a class="srclink rightside" href="../../../src/doc/fundamentals/stack.rs.html#59-91">source</a><a href="#impl-Stack%3CT%3E" class="anchor">§</a><h3 class="code-header">impl&lt;T&gt; <a class="struct" href="struct.Stack.html" title="struct doc::fundamentals::stack::Stack">Stack</a>&lt;T&gt;</h3></section></summary><div class="impl-items"><details class="toggle method-toggle" open><summary><section id="method.new" class="method"><a class="srclink rightside" href="../../../src/doc/fundamentals/stack.rs.html#61-65">source</a><h4 class="code-header">pub fn <a href="#method.new" class="fn">new</a>() -&gt; <a class="struct" href="struct.Stack.html" title="struct doc::fundamentals::stack::Stack">Stack</a>&lt;T&gt;</h4></section></summary><div class="docblock"><p>Create a new last-in-first-out (LIFO) stack of generic items. </p>
 </div></details><details class="toggle method-toggle" open><summary><section id="method.push" class="method"><a class="srclink rightside" href="../../../src/doc/fundamentals/stack.rs.html#68-70">source</a><h4 class="code-header">pub fn <a href="#method.push" class="fn">push</a>(&amp;mut self, val: T)</h4></section></summary><div class="docblock"><p>Push an element to the stack.</p>
 </div></details><details class="toggle method-toggle" open><summary><section id="method.pop" class="method"><a class="srclink rightside" href="../../../src/doc/fundamentals/stack.rs.html#73-75">source</a><h4 class="code-header">pub fn <a href="#method.pop" class="fn">pop</a>(&amp;mut self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.69.0/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;T&gt;</h4></section></summary><div class="docblock"><p>Pop an element from the stack.</p>

@@ -16,7 +16,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 /// ```
 /// use itualgs_rs::randomization::lcg_random::lcg_generate;
 /// 
-/// let mut random_vector: Vec<u32> = lcg_generate(200);
+/// let random_vector: Vec<u32> = lcg_generate(200);
 /// 
 /// assert!(random_vector.len() == 200);
 /// ``` 

@@ -64,7 +64,7 @@ impl<T> Bag<T> where T:Clone {
     }
 
     /// Gets an iterator of the bag
-    pub fn iterator(&self) -> std::collections::linked_list::Iter<T>{
+    pub fn iterator(&self) -> std::collections::linked_list::Iter<'_,T>{
         self.elements.iter()
     }
 

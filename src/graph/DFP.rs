@@ -16,7 +16,7 @@ use std::collections::{linked_list::Iter};
 /// 
 /// # Examples
 /// ```
-/// use itualgs_rs::graph::DFP::DFP;
+/// use itualgs_rs::graph::dfp::DFP;
 /// use itualgs_rs::graph::graph::Graph;
 ///
 /// let mut g = Graph::new(4);
@@ -48,7 +48,7 @@ impl DFP {
         let mut adj: Vec<Iter<usize>> = Vec::with_capacity(g.get_v());
 
         for v in 0..g.get_v() {
-            adj.push(g.adj_vertices(v))
+            adj.push(g.adj_vertices(&v))
         }
     
         let mut stack = Stack::<usize>::new();

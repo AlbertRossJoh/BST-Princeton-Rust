@@ -1,3 +1,5 @@
 pub mod graph;
-pub mod DFS;
-pub mod DFP;
+pub mod dfs;
+pub mod dfp;
+pub mod bfp;
+

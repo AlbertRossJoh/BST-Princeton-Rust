@@ -15,7 +15,7 @@ use std::collections::{linked_list::Iter};
 /// 
 /// # Examples
 /// ```
-/// use itualgs_rs::graph::DFS::DFS;
+/// use itualgs_rs::graph::dfs::DFS;
 /// use itualgs_rs::graph::graph::Graph;
 ///
 /// let mut g = Graph::new(4);
@@ -27,6 +27,7 @@ use std::collections::{linked_list::Iter};
 /// assert_eq!(paths.marked[2], true);
 /// assert_eq!(paths.marked[3], false);
 /// ```
+
 pub struct DFS{
     pub marked: Vec<bool>,
 }
@@ -44,7 +45,7 @@ impl DFS {
         let mut adj: Vec<Iter<usize>> = Vec::with_capacity(g.get_v());
 
         for v in 0..g.get_v() {
-            adj.push(g.adj_vertices(v))
+            adj.push(g.adj_vertices(&v))
         }
     
         let mut stack = Stack::<usize>::new();

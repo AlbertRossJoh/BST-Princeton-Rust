@@ -1,6 +1,7 @@
 pub mod fundamentals;
 pub mod searching;
 pub mod sorting;
+pub mod randomization;
 
 #[cfg(test)]
 mod tests {

@@ -4,10 +4,11 @@ use super::graph::Graph;
 use std::collections::{linked_list::Iter};
 
 
-/// Depth first search implmented for at graph. Depth first search is a graph searching algorithm that finds which vertices are connected to the vertex v.
-/// The `DFS::new()` has a running time of *O(V+E)* where *V* is the amount of vertices and *E* the amount of edges. 
+/// Depth first paths implmented for at graph. Depth first paths is a graph searching algorithm that finds which vertices are connected to the vertex v.
+/// The `DFP::new()` has a running time of *O(V+E)* where *V* is the amount of vertices and *E* the amount of edges.
 /// 
-/// DFS contains a vector of booleans to check weather the vertices are connected or not.
+/// DFP contains a vector of booleans to check weather the vertices are connected or not, as well a vector of paths from the given vertex. 
+/// For this reason the DFP uses more space tan DFS.
 /// 
 /// It does not support any operations, since it is just a data struct.
 /// 
@@ -15,32 +16,35 @@ use std::collections::{linked_list::Iter};
 /// 
 /// # Examples
 /// ```
-/// use itualgs_rs::graph::DFS::DFS;
+/// use itualgs_rs::graph::DFP::DFP;
 /// use itualgs_rs::graph::graph::Graph;
 ///
 /// let mut g = Graph::new(4);
 /// g.add_edge(0, 1);
 /// g.add_edge(0, 2);
-/// let paths = DFS::new(&mut g, 2);
+/// let paths = DFP::new(&mut g, 2);
 /// assert_eq!(paths.marked[1], true);
-/// assert_eq!(paths.marked[0], true);
+/// assert_eq!(paths.edge_to[2], 0);
 /// assert_eq!(paths.marked[2], true);
 /// assert_eq!(paths.marked[3], false);
 /// ```
-pub struct DFS{
+pub struct DFP{
     pub marked: Vec<bool>,
+    pub edge_to: Vec<usize>,
 }
 
-impl DFS {
+impl DFP {
 
     /// creates a new marked list from a graph
-    pub fn new(g:&mut Graph, s: usize) -> DFS{
-        DFS { marked: Self::dfs(g,s) }
+    pub fn new(g:&mut Graph, s: usize) -> DFP{
+        let tmp = Self::dfs(g,s);
+        DFP { marked: tmp.0 ,edge_to:tmp.1 }
     }
 
 
-    fn dfs(g:&mut Graph, s: usize) -> Vec<bool>{
+    fn dfs(g:&mut Graph, s: usize) -> (Vec<bool>, Vec<usize>){
         let mut m:Vec<bool> = vec![false;g.get_v()];
+        let mut edge_to:Vec<usize> = vec![0;g.get_v()];
         let mut adj: Vec<Iter<usize>> = Vec::with_capacity(g.get_v());
 
         for v in 0..g.get_v() {
@@ -55,13 +59,14 @@ impl DFS {
             if let Some(w) = adj[*v].next(){
                 if !m[*w] {
                     m[*w] = true;
+                    edge_to[*w] = *v;
                     stack.push(*w);
                 }
             } else {
                 stack.pop();
             }
         }
-        m
+        (m, edge_to)
     }
 }
 
@@ -70,16 +75,16 @@ impl DFS {
 mod tests {
     use crate::graph::graph::Graph;
 
-    use super::DFS;
+    use super::DFP;
 
     #[test]
     fn test_create_graph(){
         let mut g = Graph::new(4);
         g.add_edge(0, 1);
         g.add_edge(0, 2);
-        let paths = DFS::new(&mut g, 2);
+        let paths = DFP::new(&mut g, 2);
         assert_eq!(paths.marked[1], true);
-        assert_eq!(paths.marked[0], true);
+        assert_eq!(paths.edge_to[2], 0);
         assert_eq!(paths.marked[2], true);
         assert_eq!(paths.marked[3], false);
     }

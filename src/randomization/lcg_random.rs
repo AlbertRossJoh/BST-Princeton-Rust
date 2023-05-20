@@ -2,7 +2,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 /// The randomization lcg_random module represents a linear congruence generator.
 /// A linear congruence generator can be used to generate pseudo random number of 
 /// somewhat even distribution. This can be useful in testing different algorithms
-/// on random input. Or even for scrambling lists such as when preparing for merge sort
+/// on random input. Or even for scrambling lists such as when preparing for quick sort
 /// 
 /// This implementation uses the GLIBC (GNU C Library)'s parameters for the LCG,
 /// and seeds it using the time. The recurrence relation being:

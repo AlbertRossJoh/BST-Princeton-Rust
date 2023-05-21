@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["lcg_generate"]};
+window.SIDEBAR_ITEMS = {"fn":["lcg_generate","shuffle_list"]};

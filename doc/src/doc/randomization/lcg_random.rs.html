@@ -84,17 +84,39 @@
 <a href="#84" id="84">84</a>
 <a href="#85" id="85">85</a>
 <a href="#86" id="86">86</a>
+<a href="#87" id="87">87</a>
+<a href="#88" id="88">88</a>
+<a href="#89" id="89">89</a>
+<a href="#90" id="90">90</a>
+<a href="#91" id="91">91</a>
+<a href="#92" id="92">92</a>
+<a href="#93" id="93">93</a>
+<a href="#94" id="94">94</a>
+<a href="#95" id="95">95</a>
+<a href="#96" id="96">96</a>
+<a href="#97" id="97">97</a>
+<a href="#98" id="98">98</a>
+<a href="#99" id="99">99</a>
+<a href="#100" id="100">100</a>
+<a href="#101" id="101">101</a>
+<a href="#102" id="102">102</a>
+<a href="#103" id="103">103</a>
+<a href="#104" id="104">104</a>
+<a href="#105" id="105">105</a>
+<a href="#106" id="106">106</a>
+<a href="#107" id="107">107</a>
+<a href="#108" id="108">108</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::time::{SystemTime, UNIX_EPOCH};
 <span class="doccomment">/// The randomization lcg_random module represents a linear congruence generator.
 /// A linear congruence generator can be used to generate pseudo random number of 
 /// somewhat even distribution. This can be useful in testing different algorithms
-/// on random input. Or even for scrambling lists such as when preparing for merge sort
+/// on random input. Or even for scrambling lists such as when preparing for quick sort
 /// 
 /// This implementation uses the GLIBC (GNU C Library)&#39;s parameters for the LCG,
 /// and seeds it using the time. The recurrence relation being:
 /// `x = (1103515245 * x + 12345) % 2147483648`.
 /// 
-/// Do note that this implementation is *NOT* cryptograhpically secure.
+/// Do note that this implementation is *NOT* cryptograhically secure.
 /// 
 /// Author: cave
 /// 
@@ -102,7 +124,7 @@
 /// ```
 /// use itualgs_rs::randomization::lcg_random::lcg_generate;
 /// 
-/// let mut random_vector: Vec&lt;u32&gt; = lcg_generate(200);
+/// let random_vector: Vec&lt;u32&gt; = lcg_generate(200);
 /// 
 /// assert!(random_vector.len() == 200);
 /// ``` 
@@ -127,8 +149,22 @@
     random_list
 }
 
+<span class="kw">pub fn </span>shuffle_list&lt;T&gt;(a: <span class="kw-2">&amp;mut </span>Vec&lt;T&gt;){
+    <span class="kw">let </span>rand = lcg_generate(a.len()<span class="kw-2">*</span><span class="number">2</span>);
+    <span class="kw">let </span>len = a.len();
+    <span class="kw">for </span>i <span class="kw">in </span>(<span class="number">0</span>..rand.len()-<span class="number">2</span>).step_by((<span class="kw-2">&amp;</span>len-<span class="number">2</span>+<span class="number">1</span>)+<span class="number">2</span>) {
+        <span class="kw">let </span>index1 = rand[i] <span class="kw">as </span>usize;
+        <span class="kw">let </span>index2 = rand[i+<span class="number">1</span>] <span class="kw">as </span>usize;
+        
+        a.swap(index1 % <span class="kw-2">&amp;</span>len, index2 % <span class="kw-2">&amp;</span>len);
+    }
+}
+
+
 <span class="attr">#[cfg(test)]
 </span><span class="kw">mod </span>tests {
+    <span class="kw">use </span><span class="kw">crate</span>::randomization::lcg_random::shuffle_list;
+
     <span class="kw">use </span><span class="kw">super</span>::lcg_generate;
 
     <span class="attr">#[test]
@@ -169,5 +205,14 @@
             <span class="macro">assert!</span>(count &lt;= avg_count + tolerance, <span class="string">&quot;Count was too high: {}&quot;</span>, count);
         }
     }
-}</code></pre></div>
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_shuffle() {
+        <span class="kw">let </span><span class="kw-2">mut </span>list = <span class="macro">vec!</span>[<span class="number">2</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">5</span>,<span class="number">234</span>,<span class="number">324</span>,<span class="number">1234</span>,<span class="number">123</span>,<span class="number">4</span>,<span class="number">1234</span>,<span class="number">645</span>];
+        shuffle_list(<span class="kw-2">&amp;mut </span>list);
+        <span class="macro">assert_ne!</span>(list, <span class="macro">vec!</span>[<span class="number">2</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">5</span>,<span class="number">234</span>,<span class="number">324</span>,<span class="number">1234</span>,<span class="number">123</span>,<span class="number">4</span>,<span class="number">1234</span>,<span class="number">645</span>]);
+    }
+
+}
+</code></pre></div>
 </section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="doc" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0 (84c898d65 2023-04-16)" data-search-js="search-8a59a8356673ec1f.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" ></div></body></html>

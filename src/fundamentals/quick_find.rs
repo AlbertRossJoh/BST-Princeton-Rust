@@ -32,6 +32,7 @@ pub struct QuickFind {
 }
 
 impl QuickFind {
+    // Create a new QuickFind with N elements were all elements are singletons
     pub fn new(n: usize) -> QuickFind {
         let mut id = vec![0; n];
         for i in 0..n {
@@ -40,19 +41,22 @@ impl QuickFind {
         QuickFind { count: n, id }
     }
 
-
+    // Return the count
     pub fn count(&self) -> usize {
         self.count
     }
-
+    
+    // Check if two elements are connected
     pub fn connected(&self, p: usize, q: usize) -> bool {
         self.id[p] == self.id[q]
     }
 
+    // Find the root of a node
     pub fn find(&self, p: usize) -> usize {
         self.id[p]
     }
 
+    // Union two nodes
     pub fn union(&mut self, p: usize, q: usize) {
         let p_id = self.id[p];
         let q_id = self.id[q];

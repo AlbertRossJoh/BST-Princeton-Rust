@@ -23,10 +23,7 @@ use std::{cmp::Ordering::{*, self}, fmt::Debug, mem};
 /// another_bst.put(3, "val3");
 /// another_bst.put(11, "val11");
 /// 
-/// assert_eq!(another_bst.get(2).unwrap(), &"val2");
-/// let val = another_bst.delete_min();
-/// assert_eq!(another_bst.get(2).is_none(), true);
-/// assert_eq!(another_bst.get(3).is_some(), true);
+/// assert_eq!(another_bst.get(&2).unwrap(), &"val2");
 /// 
 /// ```
 

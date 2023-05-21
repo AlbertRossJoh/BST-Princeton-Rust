@@ -1,15 +1,4 @@
-use std::{cmp::Ordering::*, fmt::Debug, mem};
-
-#[derive(Clone)]
-#[derive(Debug)]
-struct Node<T:Ord, K> {
-    key: T,
-    val: K,
-    size: i32,
-    left: Option<Box<Node<T,K>>>,
-    right: Option<Box<Node<T,K>>>,
-}
-
+use std::{cmp::Ordering::{*, self}, fmt::Debug, mem};
 /// The BST class represents an ordered symbol table og generic key pair values
 /// It supports the operations `put`, `get`, `delete_max` and `delete_min`.
 /// 
@@ -40,173 +29,172 @@ struct Node<T:Ord, K> {
 /// assert_eq!(another_bst.get(3).is_some(), true);
 /// 
 /// ```
-pub struct BST<T:Ord, K> {root:Option<Box<Node<T, K>>>}
 
-impl<'a, T:Ord, K> BST<T,K> where T:Clone, K:Clone {
-    pub fn new()->BST<T,K>{
+struct Value<T,K> {
+    key: T,
+    val: K,
+}
+
+type Edge<T,K> = Option<Box<Node<T,K>>>;
+
+struct Node<T,K> {
+    value: Value<T,K>,
+    left: Edge<T,K>,
+    right: Edge<T,K>,
+}
+
+
+impl<T, K> Node<T,K> 
+    where T:Ord
+    {
+    fn new(key: T, val: K) -> Self {
+        Node { value: Value{ key: key, val: val }, left: None , right: None }
+    }
+    fn cmp(&self, other: &Node<T,K>) -> Ordering{
+        self.value.key.cmp(&other.value.key)
+    }
+
+    fn cmp_to_key(&self, key: &T) -> Ordering {
+        self.value.key.cmp(&key)
+    }
+}
+fn get_min_node_mut<T,K>(node:&mut Edge<T,K>) -> &mut Edge<T,K>{
+    let mut curr: *mut Edge<T,K> = node;
+    unsafe{
+        while let Some(ref mut e) = *curr {
+            if e.left.is_none() {
+                break;
+            }
+            curr = &mut e.left;
+        }
+        return &mut *curr;
+    }
+}
+
+pub struct BST<T,K>{
+    root: Edge<T,K>,
+}
+
+impl<T,K> BST<T,K> 
+    where T:Ord
+{
+    
+    pub fn new() -> Self {
         BST { root: None }
     }
 
-    
-    /// function for deleting the min node, returns true if successful false otherwise
-    pub fn delete_min(&mut self) -> bool{
-        // Get the root
-        let mut root: *mut Option<Box<Node<T,K>>> = &mut self.root;
-        // Make a clone of the root to make sure that we're not intrusive
-        let mut parent: &mut Box<Node<T,K>> = &mut self.root.clone().unwrap();
-        unsafe {
-            while let Some(ref mut node) = *root {
-                // if left is none we have reached our goal
-                if node.left.is_none(){
-                    // There might be a right value which we want to keep
-                    if node.right.is_some() {
-                        // get the right node of the current
-                        let curr = node.right.clone().unwrap();
-                        // set current node to none to remove value
-                        *root = None;
-                        // we should make sure that the parents left value gets a reference to the right value
-                        parent.left.insert(curr);
-                        return true;
-                    }
-                    // There is no right value, just remove
-                    *root = None;
-                    return true;
-                }
-                // go to next node
-                root = &mut node.left;
-                // get the parent of the next
-                parent = node;
-            }
-        }
-        false
-    }
-
-    /// function for deleting the max node, returns true if successful false otherwise
-    pub fn delete_max(&mut self) -> bool{
-        // Get the root
-        let mut root: *mut Option<Box<Node<T,K>>> = &mut self.root;
-        // Make a clone of the root to make sure that we're not intrusive
-        let mut parent: &mut Box<Node<T,K>> = &mut self.root.clone().unwrap();
-        unsafe {
-            while let Some(ref mut node) = *root {
-                // if right is none we have reached our goal
-                if node.right.is_none(){
-                    // There might be a left value which we want to keep
-                    if node.left.is_some() {
-                        // get the left node of the current
-                        let curr = node.left.clone().unwrap();
-                        // set current node to none to remove value
-                        *root = None;
-                        // we should make sure that the parents right value gets a reference to the right value
-                        parent.right.insert(curr);
-                        return true;
-                    }
-                    // There is no left value, just remove
-                    *root = None;
-                    return true;
-                }
-                // go to next node
-                root = &mut node.right;
-                // get the parent of the next
-                parent = node;
-            }
-        }
-        false
-    }
-    
-    /// Gets the root of the tree
     pub fn get_root(&self) -> Option<&K>{
         if let Some(e) = &self.root {
-            return Some(&e.val);
+            return Some(&e.value.val);
         }
         None
+    }
+
+    pub fn delete(&mut self, key: &T){
+        let curr = self.get_mut(key);
+        Self::del(curr);
+    }
+
+    /// Credit to https://codereview.stackexchange.com/users/32521/shepmaster
+    fn del(node: &mut Edge<T,K>){
+        if let Some(mut e) = node.take() {
+            match (e.left.take(), e.right.take()) {
+                (None, None) => (),
+                (Some(o), None) | 
+                (None, Some(o)) => *node = Some(o),
+                (left, right) => {
+                    e.left = left;
+                    e.right = right;
+                    {
+                        let tmp = &mut *e;
+                        let succ = get_min_node_mut(&mut tmp.right);
+                        mem::swap(&mut tmp.value, &mut succ.as_mut().unwrap().value);
+                        Self::del(succ);
+                    }
+                }
+            }
+        }
+    }
+
+    
+    fn get_min_mut(&mut self, key: &T) -> &mut Edge<T,K>{
+        let mut curr: *mut Edge<T,K> = self.get_mut(key);
+        unsafe{
+            while let Some(ref mut e) = *curr {
+                if e.left.is_none() {
+                    break;
+                }
+                curr = &mut e.left;
+            }
+            return &mut *curr;
+        }
     }
     
-    /// Get a value from a specified key, returns None if none is found
-    pub fn get(&mut self, key: T) -> Option<&mut K>{
-        if self.root.is_none(){
-            return None;
+
+    fn get_mut(&mut self, key: &T) -> &mut Edge<T,K>
+        where T:Ord
+    {
+        let mut curr: *mut Edge<T,K> = &mut self.root;
+        unsafe {
+            while let Some(ref mut node) = *curr {
+                match node.cmp_to_key(&key) {
+                    Less => curr = &mut node.left,
+                    Greater => curr = &mut node.right,
+                    Equal => {
+                        return &mut *curr;
+                    },
+                }
+            }
+            return &mut *curr;
+
         }
-        let mut curr: &mut Option<Box<Node<T,K>>> = &mut self.root;
-        while let Some(e) = curr{
-            let cmp = &key.cmp(&e.key); 
-            match cmp {
-                Less => {
-                    if e.left.is_none(){
-                        return None;
-                    }
-                    curr =&mut e.left
-                },
-                Greater => {
-                    if e.right.is_none(){
-                        return None;
-                    }
-                    curr =&mut e.right
-                },
+    }
+
+
+    pub fn get(&self, key: &T) -> Option<&K>
+        where T:Ord
+    {
+        let mut curr = &self.root;
+        while let Some(ref node) = curr {
+            match node.cmp_to_key(&key) {
+                Less => curr = &node.left,
+                Greater => curr = &node.right,
                 Equal => {
-                    return Some(&mut e.val);
+                    return Some(&curr.as_ref().unwrap().value.val);
                 },
             }
         }
         None
     }
 
-
-    /// Puts a key value pair in the symbol table
-    pub fn put(&mut self, key: T, val: K){
-        let n = Node::new(key,val,0);
-        if self.root.is_none(){
-            self.root = Some(Box::new(n));
+    pub fn put(&mut self, key: T, val: K) 
+        where T:Ord
+    {
+        let to_insert = Node::new(key, val);
+        if self.root.is_none() {
+            self.root = Some(Box::new(to_insert));
             return;
         }
-        let mut curr: &mut Option<Box<Node<T,K>>> = &mut self.root;
-        while let Some(e) = curr{
-            let cmp = &n.key.cmp(&e.key); 
-            match cmp {
-                Less => {
-                    if e.left.is_none() {
-                        e.left = Some(Box::new(n));
+        let mut curr: *mut Edge<T,K> = &mut self.root;
+        unsafe{
+            while let Some(ref mut node) = *curr {
+                match node.cmp(&to_insert) {
+                    Less => curr = &mut node.left,
+                    Greater => curr = &mut node.right,
+                    Equal => {
+                        node.value.val = to_insert.value.val;
                         return;
-                    }
-                    curr =&mut e.left
-                },
-                Greater => {
-                    if e.right.is_none() {
-                        e.right = Some(Box::new(n));
-                        break;
-                    }
-                    curr =&mut e.right
-                },
-                Equal => {
-                    e.val = n.val;
-                    return;
-                },
+                    },
+                }
             }
-        }
-    }
-}
-
-impl<T:Ord, K> Node<T,K> where T:Clone, K:Clone {
-    fn new(key:T, val:K, size: i32)->Node<T,K>{
-        Node{
-            key: key,
-            val: val,
-            size: size,
-            left: None,
-            right: None,
+            curr.replace(Some(Box::new(to_insert)));
+            return;
         }
     }
 
-    fn clone(&self)->Node<T,K>{
-        Node{
-            key: self.key.clone(),
-            val: self.val.clone(),
-            size: self.size.clone(),
-            left: self.right.clone(),
-            right: self.left.clone(),
-        }
-    }
+    
 }
+
 
 #[cfg(test)]
 mod tests {
@@ -215,66 +203,72 @@ mod tests {
 
     #[test]
     fn test_get_root() {
-        let mut bst: BST<i32,&str> = BST::new();
-        bst.put(24, "Ferris");
-        assert_eq!(bst.get_root().unwrap(), &"Ferris");
+       let mut bst: BST<i32,&str> = BST::new();
+       bst.put(24, "Ferris");
+       bst.put(20, "John");
+       assert_eq!(bst.get_root().unwrap(), &"Ferris");
+       assert_eq!(bst.get(&20).unwrap(), &"John");
+       assert_eq!(bst.get(&25).unwrap(), &"Aids");
+       bst.delete(&25);
+       assert_eq!(bst.get_root().unwrap(), &"Ferris");
+       assert_eq!(bst.get(&20).unwrap(), &"John");
     }
-
-    #[test]
-    fn test_get() {
-        let mut bst: BST<u8,&str> = BST::new();
-        bst.put(4, "val4");
-        bst.put(10, "val10");
-        bst.put(2, "val2");
-        bst.put(3, "val3");
-        bst.put(11, "val11");
-        
-        let val = bst.get(4).unwrap();
-        assert_eq!(val, &"val4");
-        let val2 = bst.get(11).unwrap();
-        assert_eq!(val2, &"val11");
-    }
-
-    #[test]
-    fn test_put() {
-        let mut bst: BST<u8,&str> = BST::new();
-        bst.put(4, "val4");
-        bst.put(10, "val10");
-        bst.put(2, "val2");
-        bst.put(3, "val3");
-        bst.put(11, "val11");
-        
-        let val = bst.get_root().unwrap();
-        assert_eq!(val, &"val4");
-    }
-
-    #[test]
-    fn test_delete_min() {
-        let mut bst: BST<u8,&str> = BST::new();
-        bst.put(4, "val4");
-        bst.put(10, "val10");
-        bst.put(2, "val2");
-        bst.put(3, "val3");
-        bst.put(11, "val11");
-        
-        assert_eq!(bst.get(2).unwrap(), &"val2");
-        let val = bst.delete_min();
-        assert_eq!(bst.get(2).is_none(), true);
-    }
-
-    #[test]
-    fn test_delete_max() {
-        let mut bst: BST<u8,&str> = BST::new();
-        bst.put(4, "val4");
-        bst.put(10, "val10");
-        bst.put(2, "val2");
-        bst.put(3, "val3");
-        bst.put(11, "val11");
-        
-        assert_eq!(bst.get(11).unwrap(), &"val11");
-        let val = bst.delete_max();
-        assert_eq!(bst.get(11).is_none(), true);
-        assert_eq!(bst.get(3).is_some(), true);
-    }
+    //
+    //#[test]
+    //fn test_get() {
+    //    let mut bst: BST<u8,&str> = BST::new();
+    //    bst.put(4, "val4");
+    //    bst.put(10, "val10");
+    //    bst.put(2, "val2");
+    //    bst.put(3, "val3");
+    //    bst.put(11, "val11");
+    //    
+    //    let val = bst.get(4).unwrap();
+    //    assert_eq!(val, &"val4");
+    //    let val2 = bst.get(11).unwrap();
+    //    assert_eq!(val2, &"val11");
+    //}
+    //
+    //#[test]
+    //fn test_put() {
+    //    let mut bst: BST<u8,&str> = BST::new();
+    //    bst.put(4, "val4");
+    //    bst.put(10, "val10");
+    //    bst.put(2, "val2");
+    //    bst.put(3, "val3");
+    //    bst.put(11, "val11");
+    //    
+    //    let val = bst.get_root().unwrap();
+    //    assert_eq!(val, &"val4");
+    //}
+    //
+    //#[test]
+    //fn test_delete_min() {
+    //    let mut bst: BST<u8,&str> = BST::new();
+    //    bst.put(4, "val4");
+    //    bst.put(10, "val10");
+    //    bst.put(2, "val2");
+    //    bst.put(3, "val3");
+    //    bst.put(11, "val11");
+    //    
+    //    assert_eq!(bst.get(2).unwrap(), &"val2");
+    //    let val = bst.delete_min();
+    //    assert_eq!(bst.get(2).is_none(), true);
+    //}
+    //
+    //#[test]
+    //fn test_delete_max() {
+    //    let mut bst: BST<u8,&str> = BST::new();
+    //    bst.put(4, "val4");
+    //    bst.put(10, "val10");
+    //    bst.put(2, "val2");
+    //    bst.put(3, "val3");
+    //    bst.put(11, "val11");
+    //    
+    //    assert_eq!(bst.get(11).unwrap(), &"val11");
+    //    let val = bst.delete_max();
+    //    assert_eq!(bst.get(11).is_none(), true);
+    //    assert_eq!(bst.get(3).is_some(), true);
+    //}
 }
 

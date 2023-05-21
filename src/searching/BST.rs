@@ -40,6 +40,34 @@ struct Node<T:Ord, K> {
 /// assert_eq!(another_bst.get(3).is_some(), true);
 /// 
 /// ```
+/// 
+
+fn _delete<T,K>(node: &mut Option<Box<Node<T,K>>>)
+    where T:Ord
+    {
+    if let Some(mut e) = node.take() {
+        match (e.left.take(),e.right.take())  {
+            (o @ Some(_), None) | 
+            (o @ Some(_), None) => *node = o,
+            (left, right) => {
+                e.left = left;
+                e.right = right;
+                {
+                    let get = &mut *e;
+                    let mut succ: &mut Option<Box<Node<T,K>>> = &mut get.right;
+                    while let Some(next) = succ {
+                        succ = &mut next.right;
+                    }
+                    mem::swap(&mut get.val, &mut succ.as_mut().unwrap().val);
+                    mem::swap(&mut get.key, &mut succ.as_mut().unwrap().key);
+                    _delete(succ)
+                }
+                *node = Some(e);
+            }
+            (_, _) => (),
+        }
+    }
+}
 pub struct BST<T:Ord, K> {root:Option<Box<Node<T, K>>>}
 
 impl<'a, T:Ord, K> BST<T,K> where T:Clone, K:Clone {
@@ -81,6 +109,11 @@ impl<'a, T:Ord, K> BST<T,K> where T:Clone, K:Clone {
         false
     }
 
+    pub fn delete(){
+        
+    }
+    
+
     /// function for deleting the max node, returns true if successful false otherwise
     pub fn delete_max(&mut self) -> bool{
         // Get the root
@@ -121,35 +154,28 @@ impl<'a, T:Ord, K> BST<T,K> where T:Clone, K:Clone {
         }
         None
     }
+
+    pub fn get(&self, key: &T) -> Option<&K>{
+        self.get_node(key).as_ref().map(|node| &node.val)
+    }
     
     /// Get a value from a specified key, returns None if none is found
-    pub fn get(&mut self, key: T) -> Option<&mut K>{
+    fn get_node(&self, key: &T) -> &Option<Box<Node<T,K>>>{
         if self.root.is_none(){
-            return None;
+            return &None;
         }
-        let mut curr: &mut Option<Box<Node<T,K>>> = &mut self.root;
+        let mut curr: &Option<Box<Node<T,K>>> = &self.root;
         while let Some(e) = curr{
             let cmp = &key.cmp(&e.key); 
             match cmp {
-                Less => {
-                    if e.left.is_none(){
-                        return None;
-                    }
-                    curr =&mut e.left
-                },
-                Greater => {
-                    if e.right.is_none(){
-                        return None;
-                    }
-                    curr =&mut e.right
-                },
-                Equal => {
-                    return Some(&mut e.val);
-                },
+                Less => curr = &e.left,
+                Greater => curr = &e.right,
+                Equal => return curr,
             }
         }
-        None
+        curr
     }
+
 
 
     /// Puts a key value pair in the symbol table
@@ -229,9 +255,9 @@ mod tests {
         bst.put(3, "val3");
         bst.put(11, "val11");
         
-        let val = bst.get(4).unwrap();
+        let val = bst.get(&4).unwrap();
         assert_eq!(val, &"val4");
-        let val2 = bst.get(11).unwrap();
+        let val2 = bst.get(&11).unwrap();
         assert_eq!(val2, &"val11");
     }
 
@@ -257,9 +283,9 @@ mod tests {
         bst.put(3, "val3");
         bst.put(11, "val11");
         
-        assert_eq!(bst.get(2).unwrap(), &"val2");
+        assert_eq!(bst.get(&2).unwrap(), &"val2");
         let val = bst.delete_min();
-        assert_eq!(bst.get(2).is_none(), true);
+        assert_eq!(bst.get(&2).is_none(), true);
     }
 
     #[test]
@@ -271,10 +297,10 @@ mod tests {
         bst.put(3, "val3");
         bst.put(11, "val11");
         
-        assert_eq!(bst.get(11).unwrap(), &"val11");
+        assert_eq!(bst.get(&11).unwrap(), &"val11");
         let val = bst.delete_max();
-        assert_eq!(bst.get(11).is_none(), true);
-        assert_eq!(bst.get(3).is_some(), true);
+        assert_eq!(bst.get(&11).is_none(), true);
+        assert_eq!(bst.get(&3).is_some(), true);
     }
 }
 

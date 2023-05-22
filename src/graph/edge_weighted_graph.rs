@@ -15,8 +15,8 @@ pub struct EdgeWeightedGraph {
 impl EdgeWeightedGraph {
     pub fn new(V: usize) -> Self {
         let mut tmp: Vec<Bag<Rc<Edge>>> = Vec::with_capacity(V);
-        for i in 0..V {
-            tmp[i] = Bag::<Rc<Edge>>::new();
+        for _ in 0..V {
+            tmp.push(Bag::<Rc<Edge>>::new());
         }
         EdgeWeightedGraph { V: V, E: 0, adj: tmp}
     }

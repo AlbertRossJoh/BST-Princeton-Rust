@@ -1,4 +1,4 @@
-use std::{cmp::Ordering::{*, self}, fmt::Debug, mem};
+use std::{cmp::Ordering::{*, self}, mem};
 /// The BST class represents an ordered symbol table og generic key pair values
 /// It supports the operations `put`, `get`, `delete_max` and `delete_min`.
 /// 
@@ -48,11 +48,11 @@ impl<T, K> Node<T,K>
         Node { value: Value{ key: key, val: val }, left: None , right: None }
     }
     fn cmp(&self, other: &Node<T,K>) -> Ordering{
-        self.value.key.cmp(&other.value.key)
+        other.value.key.cmp(&self.value.key)
     }
 
     fn cmp_to_key(&self, key: &T) -> Ordering {
-        self.value.key.cmp(&key)
+        key.cmp(&self.value.key)
     }
 }
 fn get_min_node_mut<T,K>(node:&mut Edge<T,K>) -> &mut Edge<T,K>{
@@ -63,6 +63,19 @@ fn get_min_node_mut<T,K>(node:&mut Edge<T,K>) -> &mut Edge<T,K>{
                 break;
             }
             curr = &mut e.left;
+        }
+        return &mut *curr;
+    }
+}
+
+fn get_max_node_mut<T,K>(node:&mut Edge<T,K>) -> &mut Edge<T,K>{
+    let mut curr: *mut Edge<T,K> = node;
+    unsafe{
+        while let Some(ref mut e) = *curr {
+            if e.right.is_none() {
+                break;
+            }
+            curr = &mut e.right;
         }
         return &mut *curr;
     }
@@ -87,12 +100,21 @@ impl<T,K> BST<T,K>
         None
     }
 
+    pub fn delete_max(&mut self){
+        Self::del(get_max_node_mut(&mut self.root))
+    }
+
+    pub fn delete_min(&mut self){
+        Self::del(get_min_node_mut(&mut self.root))
+    }
+
     pub fn delete(&mut self, key: &T){
         let curr = self.get_mut(key);
         Self::del(curr);
     }
 
     /// Credit to https://codereview.stackexchange.com/users/32521/shepmaster
+    /// https://codereview.stackexchange.com/questions/133209/binary-tree-implementation-in-rust/133776#133776
     fn del(node: &mut Edge<T,K>){
         if let Some(mut e) = node.take() {
             match (e.left.take(), e.right.take()) {
@@ -108,26 +130,12 @@ impl<T,K> BST<T,K>
                         mem::swap(&mut tmp.value, &mut succ.as_mut().unwrap().value);
                         Self::del(succ);
                     }
+                    *node = Some(e);
                 }
             }
         }
     }
-
     
-    fn get_min_mut(&mut self, key: &T) -> &mut Edge<T,K>{
-        let mut curr: *mut Edge<T,K> = self.get_mut(key);
-        unsafe{
-            while let Some(ref mut e) = *curr {
-                if e.left.is_none() {
-                    break;
-                }
-                curr = &mut e.left;
-            }
-            return &mut *curr;
-        }
-    }
-    
-
     fn get_mut(&mut self, key: &T) -> &mut Edge<T,K>
         where T:Ord
     {
@@ -199,16 +207,40 @@ mod tests {
     // use crate itualgs_rs::searching::BST;
 
     #[test]
-    fn test_get_root() {
+    fn test_deletion() {
        let mut bst: BST<i32,&str> = BST::new();
        bst.put(24, "Ferris");
        bst.put(20, "John");
+       bst.put(25, "Jane");
        assert_eq!(bst.get_root().unwrap(), &"Ferris");
        assert_eq!(bst.get(&20).unwrap(), &"John");
-       assert_eq!(bst.get(&25).unwrap(), &"Aids");
-       bst.delete(&25);
+       assert_eq!(bst.get(&25).unwrap(), &"Jane");
+       let tmp = bst.delete(&25);
+    //    println!("{}",tmp.is_some());
+    //    assert_eq!(tmp.unwrap(), "Jane");
+       assert_eq!(bst.get(&25).is_none(), true);
        assert_eq!(bst.get_root().unwrap(), &"Ferris");
        assert_eq!(bst.get(&20).unwrap(), &"John");
+    }
+
+    #[test]
+    fn test_deletion_2() {
+       let mut bst: BST<i32,&str> = BST::new();
+       bst.put(23, "Ferris");
+       bst.put(20, "John");
+       bst.put(25, "Jane");
+       bst.put(30, "Doe");
+       bst.put(24, "wut");
+       assert_eq!(bst.get_root().unwrap(), &"Ferris");
+       assert_eq!(bst.get(&20).unwrap(), &"John");
+       assert_eq!(bst.get(&25).unwrap(), &"Jane");
+       let tmp = bst.delete(&25);
+    //    println!("{}",tmp.is_some());
+    //    assert_eq!(tmp.unwrap(), "Jane");
+       assert_eq!(bst.get(&25).is_none(), true);
+       assert_eq!(bst.get_root().unwrap(), &"Ferris");
+       assert_eq!(bst.get(&20).unwrap(), &"John");
+       assert_eq!(bst.get(&30).unwrap(), &"Doe");
     }
     //
     //#[test]

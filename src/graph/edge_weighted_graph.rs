@@ -6,8 +6,8 @@ use super::edge::Edge;
 
 
 pub struct EdgeWeightedGraph {
-    V: usize,
-    E: usize,
+    pub V: usize,
+    pub E: usize,
     adj: Vec<Bag<Rc<Edge>>>,
 }
 

@@ -4,7 +4,7 @@ use std::cmp::Ordering;
 pub struct Edge {
     v: usize,
     w: usize,
-    weight: f64
+    pub weight: f64
 }
 
 impl Edge {
@@ -25,11 +25,14 @@ impl Edge {
         }
     }
 
-    pub fn cmp(&self, that:Edge) -> Ordering{
+    pub fn cmp(&self, that: &Edge) -> Ordering{
         self.weight.total_cmp(&that.weight)
     }
+
+    // pub fn cmp_for_sort(&self, that:Edge)
 
     pub fn clone(&self) -> Edge {
         Edge { v: self.v.clone(), w: self.w.clone(), weight: self.weight.clone() }
     }
+
 }

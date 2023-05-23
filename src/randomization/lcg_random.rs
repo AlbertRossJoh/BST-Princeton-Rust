@@ -44,7 +44,7 @@ pub fn lcg_generate(size: usize) -> Vec<u32> {
 pub fn shuffle_list<T>(a: &mut Vec<T>){
     let rand = lcg_generate(a.len()*2);
     let len = a.len();
-    for i in (0..rand.len()-2).step_by((&len-2+1)+2) {
+    for i in (0..rand.len()-2).step_by(3) {
         let index1 = rand[i] as usize;
         let index2 = rand[i+1] as usize;
         
@@ -103,6 +103,7 @@ mod tests {
         let mut list = vec![2,3,1,5,234,324,1234,123,4,1234,645];
         shuffle_list(&mut list);
         assert_ne!(list, vec![2,3,1,5,234,324,1234,123,4,1234,645]);
+        println!("{:?}", list);
     }
 
 }

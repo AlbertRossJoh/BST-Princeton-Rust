@@ -151,6 +151,7 @@ impl<T> IndexMinPQ<T>
     }
 }
 
+
 #[cfg(test)]
 mod tests {
     use super::IndexMinPQ;

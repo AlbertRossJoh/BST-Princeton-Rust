@@ -4,12 +4,12 @@ use std::cmp::Ordering;
 pub struct Edge {
     v: usize,
     w: usize,
-    pub weight: f64
+    pub weight: u128
 }
 
 impl Edge {
     
-    pub fn new(v: usize, w:usize, weight:f64) -> Self{
+    pub fn new(v: usize, w:usize, weight:u128) -> Self{
         Edge { v: v, w: w, weight: weight }
     }
 
@@ -26,7 +26,7 @@ impl Edge {
     }
 
     pub fn cmp(&self, that: &Edge) -> Ordering{
-        self.weight.total_cmp(&that.weight)
+        self.weight.cmp(&that.weight)
     }
 
     // pub fn cmp_for_sort(&self, that:Edge)

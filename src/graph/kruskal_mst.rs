@@ -6,14 +6,14 @@ use super::{edge::Edge, edge_weighted_graph::EdgeWeightedGraph};
 
 
 pub struct KruskalMST {
-    pub weight: f64,
+    pub weight: u128,
     mst: Queue<Rc<Edge>>,
 }
 
 impl KruskalMST {
     
     pub fn new(G: EdgeWeightedGraph) -> Self {
-        let mut kruskal = KruskalMST{weight: 0., mst: Queue::new()};
+        let mut kruskal = KruskalMST{weight: 0, mst: Queue::new()};
         let mut edges: Vec<&Rc<Edge>> = Vec::new();
         let tmp = G.edges();
         for e in tmp.iterator() {
@@ -61,9 +61,9 @@ mod tests {
     fn test_create_graph(){
         let mut g = EdgeWeightedGraph::new(4);
         let list = vec![
-            Edge::new(0, 1, 0.2), 
-            Edge::new(2, 1, 5.), 
-            Edge::new(2, 0, 0.3)];
+            Edge::new(0, 1, 10), 
+            Edge::new(2, 1, 2), 
+            Edge::new(2, 0, 20)];
         
         for ele in list {
             g.add_edge(ele);

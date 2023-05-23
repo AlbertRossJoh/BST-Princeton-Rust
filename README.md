@@ -9,3 +9,6 @@ This project was created in 2023 by two students from the IT University of Copen
 
 ## Contributing
 TBD..
+
+## Documentation
+The documentation is available at https://albertrossjoh.github.io/itualgs_rs/itualgs_rs/index.html.

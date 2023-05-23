@@ -7,7 +7,7 @@ use super::{edge::Edge, edge_weighted_graph::EdgeWeightedGraph, graph};
 /// Dijkstras algorithm is for findin the shortest path between two points. 
 /// This is done by creating a shortest path tree which means, that we actually gets the shortest path to any point in the edgeweighted graph.
 /// 
-/// The `new` method runs in time $O(E\log V)$ for a graph with edges $E$ and vertices $V$.
+/// The `new` method runs in time *O(E log V)* for a graph with edges *E* and vertices *V*.
 /// 
 /// Author: AlberRossJoh
 /// 

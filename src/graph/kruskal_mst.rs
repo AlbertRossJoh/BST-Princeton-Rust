@@ -8,7 +8,7 @@ use super::{edge::Edge, edge_weighted_graph::EdgeWeightedGraph};
 /// Kruskals algorithm is created to find a minimum spanning tree over a weighted undirected graph. 
 /// It does this by, until every edge have been touched, continuously getting the edge with the lowest weight in the graph and adding it to the MST.
 /// 
-/// It has a running time of $O(E\log E)$ in the worst case, where $E$ is the amount of edges
+/// It has a running time of *O(E log E)* in the worst case, where *E* is the amount of edges
 /// 
 /// Author: AlberRossJoh
 /// 

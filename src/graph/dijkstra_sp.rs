@@ -4,13 +4,46 @@ use super::{edge::Edge, edge_weighted_graph::EdgeWeightedGraph, graph};
 
 
 
-pub struct DijstraSP {
+/// Dijkstras algorithm is for findin the shortest path between two points. 
+/// This is done by creating a shortest path tree which means, that we actually gets the shortest path to any point in the edgeweighted graph.
+/// 
+/// The `new` method runs in time $O(E\log V)$ for a graph with edges $E$ and vertices $V$.
+/// 
+/// Author: AlberRossJoh
+/// 
+/// # Examples
+/// ```
+/// use itualgs_rs::graph::dijkstra_sp::DijkstraSP;
+/// use itualgs_rs::graph::edge::Edge;
+/// use itualgs_rs::graph::edge_weighted_graph::EdgeWeightedGraph;
+/// 
+/// 
+/// let mut g = EdgeWeightedGraph::new(4);
+/// let list = vec![
+///     Edge::new(0, 1, 10), 
+///     Edge::new(2, 1, 2), 
+///     Edge::new(2, 0, 20)];
+/// 
+/// for ele in list {
+///     g.add_edge(ele);
+/// }
+/// let mut dijkstra_SP = DijkstraSP::new(g, 0);
+/// let mut dist_2 = dijkstra_SP.get_distance_to(&2);
+/// assert_eq!(dist_2, 12);
+/// 
+/// let mut path = dijkstra_SP.path_to(&2).unwrap();
+/// 
+/// assert_eq!(path.pop().unwrap().weight, 10);
+/// assert_eq!(path.pop().unwrap().weight, 2);
+/// assert_eq!(path.is_empty(), true);
+/// ```
+pub struct DijkstraSP {
     dist_to: Vec<u128>,
     edge_to: Vec<Option<Edge>>,
     pq: IndexMinPQ<u128>,
 }
 
-impl DijstraSP {
+impl DijkstraSP {
     
     pub fn new(G: EdgeWeightedGraph, s: usize) -> Self{
         let mut dist_to = vec![u128::MAX;G.V];
@@ -19,7 +52,7 @@ impl DijstraSP {
         dist_to[s] = 0;
         let pq = IndexMinPQ::<u128>::new(G.V);
 
-        let mut tmp = DijstraSP{dist_to: dist_to, edge_to: edge_to, pq:pq};
+        let mut tmp = DijkstraSP{dist_to: dist_to, edge_to: edge_to, pq:pq};
         tmp.pq.insert(&s, tmp.dist_to[s]);
 
         while !tmp.pq.is_empty() {
@@ -31,14 +64,17 @@ impl DijstraSP {
         tmp
     }
 
+    /// is constant time
     pub fn get_distance_to(&self, v:&usize) -> u128 {
         self.dist_to[*v]
     }
-
+    
+    /// is constant time
     pub fn has_path_to(&self, v:&usize) -> bool {
         self.dist_to[*v] < u128::MAX
     }
 
+    /// Is $O(N)$ in the amount of $N$ vertices to v
     pub fn path_to(&self, v: &usize) -> Option<Stack<Edge>> {
         if !self.has_path_to(v) {
             return None;
@@ -70,5 +106,36 @@ impl DijstraSP {
             }
         }
         
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::graph::edge::Edge;
+
+    use super::EdgeWeightedGraph;
+
+    use super::DijkstraSP;
+
+    #[test]
+    fn test_create_graph(){
+        let mut g = EdgeWeightedGraph::new(4);
+        let list = vec![
+            Edge::new(0, 1, 10), 
+            Edge::new(2, 1, 2), 
+            Edge::new(2, 0, 20)];
+        
+        for ele in list {
+            g.add_edge(ele);
+        }
+        let mut k = DijkstraSP::new(g, 0);
+        let mut dist_2 = k.get_distance_to(&2);
+        assert_eq!(dist_2, 12);
+        
+        let mut path = k.path_to(&2).unwrap();
+        
+        assert_eq!(path.pop().unwrap().weight, 10);
+        assert_eq!(path.pop().unwrap().weight, 2);
+        assert_eq!(path.is_empty(), true);
     }
 }

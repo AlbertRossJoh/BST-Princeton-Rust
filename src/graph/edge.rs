@@ -1,5 +1,21 @@
 use std::cmp::Ordering;
 
+/// Edge is a data struct for representing an edge in a graph.
+/// It has two methods for getting from to nodes which is `either` and `other`. The `either` method returns v, and the `other` method returns the vertex opposite the one you give as an argument.
+/// The weight is represented as a u128.
+/// 
+/// Author: AlberRossJoh
+/// 
+/// # Examples
+/// ```
+/// use itualgs_rs::graph::edge::Edge;
+/// 
+/// let mut edge = Edge::new(1, 2, 3);
+/// let either = edge.either();
+/// let other = edge.other(either);
+/// assert_eq!(either, 1);
+/// assert_eq!(other, 2);
+/// ```
 #[derive(Clone)]
 pub struct Edge {
     v: usize,
@@ -28,8 +44,6 @@ impl Edge {
     pub fn cmp(&self, that: &Edge) -> Ordering{
         self.weight.cmp(&that.weight)
     }
-
-    // pub fn cmp_for_sort(&self, that:Edge)
 
     pub fn clone(&self) -> Edge {
         Edge { v: self.v.clone(), w: self.w.clone(), weight: self.weight.clone() }

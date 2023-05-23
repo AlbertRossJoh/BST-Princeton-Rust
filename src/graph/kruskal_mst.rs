@@ -5,6 +5,37 @@ use crate::fundamentals::{queue::Queue, uf::WeightedQuickUnionUF};
 use super::{edge::Edge, edge_weighted_graph::EdgeWeightedGraph};
 
 
+/// Kruskals algorithm is created to find a minimum spanning tree over a weighted undirected graph. 
+/// It does this by, until every edge have been touched, continuously getting the edge with the lowest weight in the graph and adding it to the MST.
+/// 
+/// It has a running time of $O(E\log E)$ in the worst case, where $E$ is the amount of edges
+/// 
+/// Author: AlberRossJoh
+/// 
+/// # Examples
+/// ```
+/// use itualgs_rs::graph::kruskal_mst::KruskalMST;
+/// use itualgs_rs::graph::edge::Edge;
+/// use itualgs_rs::graph::edge_weighted_graph::EdgeWeightedGraph;
+/// 
+/// 
+/// let mut g = EdgeWeightedGraph::new(4);
+/// let list = vec![
+///     Edge::new(0, 1, 10), 
+///     Edge::new(2, 1, 2), 
+///     Edge::new(2, 0, 20)];
+/// 
+/// for ele in list {
+///     g.add_edge(ele);
+/// }
+/// 
+/// let mut k = KruskalMST::new(g);
+/// let mut edges = k.edges();
+/// let w1 = edges.dequeue().unwrap();
+/// let w2 = edges.dequeue().unwrap();
+/// assert_eq!(w1.weight, 2);
+/// assert_eq!(w2.weight, 10);
+/// ```
 pub struct KruskalMST {
     pub weight: u128,
     mst: Queue<Rc<Edge>>,
@@ -44,8 +75,8 @@ impl KruskalMST {
         kruskal
     }
 
-    pub fn edges(self) -> Queue<Rc<Edge>>{
-        self.mst
+    pub fn edges(&mut self) -> &mut Queue<Rc<Edge>>{
+        &mut self.mst
     }
 }
 
@@ -69,14 +100,10 @@ mod tests {
             g.add_edge(ele);
         }
         let mut k = KruskalMST::new(g);
-        let mut edges = &mut k.edges();
-        for _ in 0..edges.size().clone() {
-            println!("{}", edges.dequeue().unwrap().weight);
-        }
-        // let paths = DFP::new(&mut g, 2);
-        // assert_eq!(paths.marked[1], true);
-        // assert_eq!(paths.edge_to[2], 0);
-        // assert_eq!(paths.marked[2], true);
-        // assert_eq!(paths.marked[3], false);
+        let mut edges = k.edges();
+        let w1 = edges.dequeue().unwrap();
+        let w2 = edges.dequeue().unwrap();
+        assert_eq!(w1.weight, 2);
+        assert_eq!(w2.weight, 10);
     }
 }

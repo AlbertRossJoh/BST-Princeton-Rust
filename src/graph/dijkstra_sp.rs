@@ -74,17 +74,17 @@ impl DijkstraSP {
         self.dist_to[*v] < u128::MAX
     }
 
-    /// Is $O(N)$ in the amount of $N$ vertices to v
-    pub fn path_to(&self, v: &usize) -> Option<Stack<Edge>> {
+    /// Is $O(N)$ in the amount of *N* vertices to v
+    pub fn path_to(&self, v: &usize) -> Option<Stack<&Edge>> {
         if !self.has_path_to(v) {
             return None;
         }
-        let mut s = Stack::<Edge>::new();
-        let mut x = *v;
+        let mut s = Stack::<&Edge>::new();
+        let mut x = v;
         loop {
-            if let Some(e) = &self.edge_to[x] {
-                s.push(e.clone());
-                x = *e.other(x);
+            if let Some(e) = &self.edge_to[*x] {
+                s.push(e);
+                x = e.other(*x);
             } else {
                 break;
             }
